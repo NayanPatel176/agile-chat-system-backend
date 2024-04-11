@@ -41,6 +41,7 @@ router.post('', async (req, res) => {
             chatListPayload.groupName = `Group ${Math.floor(Date.now() / 1000)}`
             const chatList = new ChatList(chatListPayload);
             await chatList.save()
+            req.io.emit('createChat', chatList)
             return res.status(200).json({ data: chatList, message: "Chat created successfully.", status: 200 })
         }
         const userQuery = { _id: { $in: participants } }
@@ -52,6 +53,7 @@ router.post('', async (req, res) => {
         const options = { upsert: true, new: true }
 
         const chatList = await ChatList.findOneAndUpdate(filter, update, options)
+        req.io.emit('createChat', chatList)
         res.status(200).json({ data: chatList, message: "Chat created successfully.", status: 200 })
     } catch (error) {
         res.status(500).json({ status: 500, message: 'Something went wrong' })
