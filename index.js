@@ -24,6 +24,7 @@ if (cluster.isMaster) {
   }
   cluster.on('exit', (worker, code, signal) => {
     console.log(`Worker ${worker.process.pid} died`);
+    cluster.fork()
   });
 } else {
   const server = http.createServer(app)
@@ -32,6 +33,11 @@ if (cluster.isMaster) {
     req.io = io;
     next();
   });
+
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url} - Status Code: ${res.statusCode}`);
+    next();
+});
 
   app.use('/user', user)
   app.use('/chat', chat)
