@@ -23,6 +23,9 @@ const chatListSchema = mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  lastMessAt: {
+    type: Date
   }
 });
 

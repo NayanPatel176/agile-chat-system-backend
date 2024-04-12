@@ -16,7 +16,7 @@ router.get('', async (req, res) => {
         }
         const query = { participants: { $in: [userId] } }
         const chatList = await ChatList.find(query)
-            .sort({ createdAt: -1 })
+            .sort({ lastMessAt: -1, createdAt: -1 })
             .skip(parseInt(skip) || 0)
             .limit(parseInt(limit) || 10)
         const chatListCount = await ChatList.countDocuments(query)
@@ -33,6 +33,11 @@ router.post('', async (req, res) => {
             return res.status(400).json({ message: "Participants array must contain more than 2 values.", status: 400 });
         }
 
+        const senderData = await User.findOne({ _id: participants[0] })
+        if (!senderData) {
+            return res.status(404).json({ message: "Sender data not found!", status: 404 })
+        }
+
         const chatListPayload = {
             isGroupChat: !!req.body.isGroupChat,
             participants
@@ -41,7 +46,11 @@ router.post('', async (req, res) => {
             chatListPayload.groupName = `Group ${Math.floor(Date.now() / 1000)}`
             const chatList = new ChatList(chatListPayload);
             await chatList.save()
-            req.io.emit('createChat', chatList)
+
+            const emitData = JSON.parse(JSON.stringify(chatList))
+            emitData.senderName = senderData.userName
+            emitData.senderId = senderData._id
+            req.io.emit('createChat', emitData)
             return res.status(200).json({ data: chatList, message: "Chat created successfully.", status: 200 })
         }
         const userQuery = { _id: { $in: participants } }
@@ -53,7 +62,10 @@ router.post('', async (req, res) => {
         const options = { upsert: true, new: true }
 
         const chatList = await ChatList.findOneAndUpdate(filter, update, options)
-        req.io.emit('createChat', chatList)
+        const emitData = JSON.parse(JSON.stringify(chatList))
+        emitData.senderName = senderData.userName
+        emitData.senderId = senderData._id
+        req.io.emit('createChat', emitData)
         res.status(200).json({ data: chatList, message: "Chat created successfully.", status: 200 })
     } catch (error) {
         res.status(500).json({ status: 500, message: 'Something went wrong' })
