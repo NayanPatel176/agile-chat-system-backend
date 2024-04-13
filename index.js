@@ -1,7 +1,6 @@
 const http = require('http')
 const cluster = require('cluster')
 const numCPUs = require('os').cpus().length
-const serverless = require('serverless-http');
 const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv')
@@ -52,6 +51,4 @@ if (false) {
   server.listen(process.env.PORT, async () => {
     console.log("App listen on", process.env.PORT)
   })
-  app.use('/.netlify/functions/api', app._router);
-  module.exports.handler = serverless(app);
 }
