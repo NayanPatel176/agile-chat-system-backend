@@ -1,6 +1,6 @@
 const User = require('../modules/userModule')
 
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
 const userLoginHandler = (body) => new Promise(async (resolve, reject) => {
@@ -35,6 +35,22 @@ const userLoginHandler = (body) => new Promise(async (resolve, reject) => {
     }
 })
 
+const userDetailsHandler = ({ userId }) => new Promise(async (resolve, reject) => {
+    try {
+        if (!userId || !ObjectId.isValid(userId)) {
+            return reject({ message: "userId is missing or invalid.", status: 400 })
+        }
+        const userDetails = await User.findOne({ _id: userId })
+        if (userDetails) {
+            return resolve({ message: "Users details retrived successfully.", userDetails, status: 200 })
+        }
+
+        return reject({ message: "User not found.", status: 404 })
+    } catch (error) {
+        return reject({ message: 'Something went wrong', status: 500 })
+    }
+})
+
 const userListHandler = (params) => new Promise(async (resolve, reject) => {
     try {
         const { skip = 0, limit = 10, userId } = params
@@ -53,4 +69,4 @@ const userListHandler = (params) => new Promise(async (resolve, reject) => {
     }
 })
 
-module.exports = { userLoginHandler, userListHandler }
+module.exports = { userLoginHandler, userListHandler, userDetailsHandler }

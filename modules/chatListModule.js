@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const chatListSchema = mongoose.Schema({
   isGroupChat: {
@@ -27,6 +27,6 @@ const chatListSchema = mongoose.Schema({
   lastMessAt: {
     type: Date
   }
-});
+})
 
-module.exports = mongoose.model('chatList', chatListSchema);
+module.exports = mongoose.model('chatList', chatListSchema)

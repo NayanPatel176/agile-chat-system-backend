@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const chatsSchema = mongoose.Schema({
   chatId:{
@@ -23,6 +23,6 @@ const chatsSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   }
-});
+})
 
-module.exports = mongoose.model('chats', chatsSchema);
+module.exports = mongoose.model('chats', chatsSchema)

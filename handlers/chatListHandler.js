@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
 const ChatList = require('../modules/chatListModule')
@@ -25,7 +25,7 @@ const postChatListHandler = (body, isSocket) => new Promise(async (resolve, reje
         }
         if (chatListPayload.isGroupChat) {
             chatListPayload.groupName = `Group ${Math.floor(Date.now() / 1000)}`
-            const chatList = new ChatList(chatListPayload);
+            const chatList = new ChatList(chatListPayload)
             await chatList.save()
 
             const emitData = JSON.parse(JSON.stringify(chatList))
