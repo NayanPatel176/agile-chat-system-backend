@@ -2,8 +2,7 @@
 const mongoose = require('mongoose')
 
 // MongoDB connection URI
-// const mongoURI = 'mongodb://localhost:27017/agileInfo'
-const mongoURI = 'mongodb+srv://nayan:HMlQDwiH6qWws6lR@cluster0.0udiwha.mongodb.net/agileInfo'
+const mongoURI = process.env.MONGO_DB_URL
 
 // Mongoose connection options
 const options = {
