@@ -13,6 +13,7 @@ exports.SocketManager = function (server) {
         })
 
         socket.on('joinGroup', (groupId) => {
+            console.log('groupId: ', groupId)
             if (!groupSockets.has(groupId)) {
                 groupSockets.set(groupId, new Set())
             }
@@ -20,14 +21,14 @@ exports.SocketManager = function (server) {
             socket.join(groupId)
         })
 
-        socket.on('privateMessage', (data) => {
-            const { recipientId, message } = data
-            io.to(recipientId).emit('privateMessage', message)
-        })
-
-        socket.on('groupMessage', (data) => {
-            const { groupId, message } = data
-            io.to(groupId).emit(`groupMessage:${groupId}`, message)
+        socket.on('message', async (data) => {
+            const { participants = [], message } = data
+            if (participants && participants.length) {
+                participants.map(id => {
+                    io.to(id).emit('message', message)
+                })
+            }
+            await postMessageHandler(message)
         })
 
         socket.on('createChat', async (message) => {

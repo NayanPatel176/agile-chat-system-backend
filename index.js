@@ -17,8 +17,8 @@ app.use(cors())
 
 const { user, chat, message } = require('./routes')
 
-// if (false) {
-if (cluster.isMaster) {
+if (false) {
+// if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`)
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork()
@@ -38,7 +38,7 @@ if (cluster.isMaster) {
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.url} - Status Code: ${res.statusCode}`)
     next()
-})
+  })
 
   app.use('/user', user)
   app.use('/chat', chat)

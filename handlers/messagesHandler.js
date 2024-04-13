@@ -5,9 +5,8 @@ const Chats = require('../modules/chatsModule')
 const ChatList = require('../modules/chatListModule')
 const User = require('../modules/userModule')
 
-const getMessageHandler = (params) => new Promise(async (resolve, reject) => {
+const getMessageHandler = ({ chatId, skip, limit, userId }) => new Promise(async (resolve, reject) => {
     try {
-        const { chatId, skip, limit, userId } = params
         if (!chatId || !ObjectId.isValid(chatId)) {
             return reject({ message: "chatId is missing or invalid.", status: 400 })
         }
@@ -31,9 +30,8 @@ const getMessageHandler = (params) => new Promise(async (resolve, reject) => {
     }
 })
 
-const postMessageHandler = (body) => new Promise(async (resolve, reject) => {
+const postMessageHandler = ({ chatId, senderId, message }) => new Promise(async (resolve, reject) => {
     try {
-        const { chatId, senderId, message } = body
         if (!chatId || !ObjectId.isValid(chatId)) {
             return reject({ message: "chatId is missing or invalid.", status: 400 })
         }
