@@ -20,7 +20,7 @@ const getMessageHandler = ({ chatId, skip, limit, userId }) => new Promise(async
         }
         const query = { chatId: chatId }
         const messages = await Chats.find(query)
-            .sort({ createdAt: 1 })
+            .sort({ createdAt: -1 })
             .skip(parseInt(skip) || 0)
             .limit(parseInt(limit) || 10)
         const messagesCount = await Chats.countDocuments(query)
